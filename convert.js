@@ -167,14 +167,34 @@ async function moddleJSToSyncfusionJS() {
 
             if(object.$type.includes("Edge")) {
 
+                syObject = {
+                    id: object.bpmnElement.id,
+                    sourceID: object.bpmnElement.sourceRef.id,
+                    targetID: object.bpmnElement.targetRef.id,
+                    type: "Orthogonal",
+                    annotations: [{
+                        content: object.bpmnElement.name != undefined ? object.bpmnElement.name : ""
+                    }]
+                }
 
+                connectorArray.push(syObject);
+
+                return syObject;
 
             } // if edge
 
         }).toArray() // syncfusionElements
 
-    console.log(nodeArray);
+    saveToJson("osszetettebbPeldaGateway", nodeArray, connectorArray);
 
 } // moddleJSToSyncfusionJS
+
+async function saveToJson(fileName, nodeArray, connectorArray) {
+
+    fs.writeFileSync("./generatedJson/" + fileName + "NodeArray.json", JSON.stringify(nodeArray));
+
+    fs.writeFileSync("./generatedJson/" + fileName + "ConnectorArray.json", JSON.stringify(connectorArray));
+
+} // saveToJson
 
 moddleJSToSyncfusionJS();
